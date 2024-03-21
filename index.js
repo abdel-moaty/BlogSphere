@@ -14,7 +14,7 @@ app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 
 // Routes
 app.get('/', (req, res) => {
-    res.send('Hello, world!');
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 // Start server
