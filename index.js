@@ -6,6 +6,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const path = require('path');
 const mongoose = require('mongoose');
 const User = require('./models/User');
+const errorHandler = require('./errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -64,6 +65,9 @@ app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
 });
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
