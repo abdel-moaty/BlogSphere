@@ -1,4 +1,3 @@
-// index.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
@@ -59,6 +58,12 @@ app.post('/login', passport.authenticate('local', {
     failureRedirect: '/',
     failureFlash: true
 }));
+
+// Logout route
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+});
 
 // Start server
 app.listen(PORT, () => {
