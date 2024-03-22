@@ -29,6 +29,16 @@
     <div class="container">
         <h1>Welcome to BlogSphere</h1>
         <p>This is a simple blogging platform.</p>
+	<h2>Latest Posts</h2>
+	<ul>
+	  <% posts.forEach(post => { %>
+	  <li>
+	    <h3><%= post.title %></h3>
+	    <p>By <%= post.author.username %></p>
+	    <p><%= post.content %></p>
+	  </li>
+	  <% }); %>
+	</ul>
     </div>
 </body>
 </html>

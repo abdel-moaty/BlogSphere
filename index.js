@@ -49,16 +49,20 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-// Routes
+// Modify the route handler for the homepage to fetch all posts
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+    Post.find()
+        .populate('author') // Populate the 'author' field with user details
+        .exec((err, posts) => {
+            if (err) {
+                console.error('Error fetching posts:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                res.render('index', { posts: posts, user: req.user });
+            }
+        });
 });
 
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/',
-    failureFlash: true
-}));
 
 // Logout route
 app.get('/logout', (req, res) => {
@@ -81,6 +85,12 @@ function ensureAuthenticated(req, res, next) {
     }
     res.redirect('/login'); // Redirect to login page if not authenticated
 }
+
+// Error handling middleware for ensureAuthenticated middleware
+app.use((err, req, res, next) => {
+    console.error('Authentication error:', err);
+    res.status(500).send('Authentication error');
+});
 
 // Add a new route for handling post creation
 app.get('/new', ensureAuthenticated, (req, res) => {
