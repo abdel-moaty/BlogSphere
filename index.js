@@ -165,3 +165,18 @@ app.post('/edit/:postId', ensureAuthenticated, (req, res) => {
             res.redirect('/');
         });
 });
+
+// Add a new route for deleting posts
+app.post('/delete/:postId', ensureAuthenticated, (req, res) => {
+    const postId = req.params.postId;
+
+    // Find the post by ID and delete it
+    Post.findByIdAndDelete(postId)
+        .then(() => {
+            res.redirect('/');
+        })
+        .catch(err => {
+            console.error('Error deleting post:', err);
+            res.redirect('/');
+        });
+});
