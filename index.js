@@ -112,3 +112,19 @@ app.post('/new', ensureAuthenticated, (req, res) => {
             res.redirect('/');
         });
 });
+
+// Add a new route for viewing individual posts
+app.get('/post/:postId', (req, res) => {
+    const postId = req.params.postId;
+
+    Post.findById(postId)
+        .populate('author') // Populate the 'author' field with user details
+        .exec((err, post) => {
+            if (err || !post) {
+                console.error('Error fetching post:', err);
+                res.status(404).send('Post not found');
+            } else {
+                res.render('post', { post: post, user: req.user });
+            }
+        });
+});
