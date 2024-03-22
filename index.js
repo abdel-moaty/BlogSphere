@@ -7,7 +7,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const errorHandler = require('./errorHandler');
-
+const Post = require('./models/Post');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -72,4 +72,33 @@ app.use(errorHandler);
 // Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+// Custom middleware to check if user is authenticated
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login'); // Redirect to login page if not authenticated
+}
+
+// Add a new route for handling post creation
+app.get('/new', ensureAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'new.html'));
+});
+
+// Handle form submission for creating new posts
+app.post('/new', ensureAuthenticated, (req, res) => {
+    const { title, content } = req.body;
+    const newPost = { title, content, author: req.user._id };
+
+    // Save the new post to the database
+    Post.create(newPost)
+        .then(() => {
+            res.redirect('/');
+        })
+        .catch(err => {
+            console.error('Error creating new post:', err);
+            res.redirect('/');
+        });
 });
