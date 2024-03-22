@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <p>Username: <%= user.username %></p>
+    <p>Full Name: <%= user.fullName %></p>
+    <p>Bio: <%= user.bio %></p>
+
+    <h2>Authored Posts</h2>
+    <ul>
+        <% user.posts.forEach(post => { %>
+            <li><%= post.title %></li>
+        <% }); %>
+    </ul>
+</body>
+</html>

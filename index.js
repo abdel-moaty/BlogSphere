@@ -180,3 +180,20 @@ app.post('/delete/:postId', ensureAuthenticated, (req, res) => {
             res.redirect('/');
         });
 });
+
+// Add route for viewing user profile
+app.get('/profile', ensureAuthenticated, (req, res) => {
+    // Fetch the currently authenticated user's details
+    const userId = req.user._id;
+
+    User.findById(userId)
+        .populate('posts') // Populate the 'posts' field with user's authored posts
+        .exec((err, user) => {
+            if (err || !user) {
+                console.error('Error fetching user profile:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                res.render('profile', { user: user });
+            }
+        });
+});
