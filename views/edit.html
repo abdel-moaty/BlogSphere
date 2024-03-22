@@ -1,0 +1,10 @@
+<div class="container">
+    <h1>Edit Post</h1>
+    <form action="/edit/<%= post._id %>" method="post">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" value="<%= post.title %>"><br>
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="4" cols="50"><%= post.content %></textarea><br>
+        <button type="submit">Update Post</button>
+    </form>
+</div>

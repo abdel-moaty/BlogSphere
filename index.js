@@ -128,3 +128,40 @@ app.get('/post/:postId', (req, res) => {
             }
         });
 });
+
+// Add a new route for editing existing posts
+app.get('/edit/:postId', ensureAuthenticated, (req, res) => {
+    const postId = req.params.postId;
+
+    Post.findById(postId)
+        .populate('author') // Populate the 'author' field with user details
+        .exec((err, post) => {
+            if (err || !post) {
+                console.error('Error fetching post:', err);
+                res.status(404).send('Post not found');
+            } else {
+                // Check if the logged-in user is the author of the post
+                if (post.author.equals(req.user._id)) {
+                    res.render('edit', { post: post });
+                } else {
+                    res.status(403).send('Forbidden');
+                }
+            }
+        });
+});
+
+// Handle form submission for updating existing posts
+app.post('/edit/:postId', ensureAuthenticated, (req, res) => {
+    const postId = req.params.postId;
+    const { title, content } = req.body;
+
+    // Find the post by ID and update its title and content
+    Post.findByIdAndUpdate(postId, { title: title, content: content }, { new: true })
+        .then(updatedPost => {
+            res.redirect(`/post/${postId}`);
+        })
+        .catch(err => {
+            console.error('Error updating post:', err);
+            res.redirect('/');
+        });
+});
