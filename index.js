@@ -197,3 +197,32 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
             }
         });
 });
+
+// Add a new route for submitting comments
+app.post('/comment/:postId', ensureAuthenticated, (req, res) => {
+    const postId = req.params.postId;
+    const { content } = req.body;
+
+    // Find the post by ID and add a new comment
+    Post.findById(postId)
+        .then(post => {
+            if (!post) {
+                console.error('Post not found');
+                res.status(404).send('Post not found');
+            } else {
+                const newComment = {
+                    content: content,
+                    author: req.user._id
+                };
+                post.comments.push(newComment);
+                return post.save();
+            }
+        })
+        .then(() => {
+            res.redirect(`/post/${postId}`);
+        })
+        .catch(err => {
+            console.error('Error adding comment:', err);
+            res.redirect(`/post/${postId}`);
+        });
+});

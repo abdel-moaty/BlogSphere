@@ -2,4 +2,21 @@
     <h1><%= post.title %></h1>
     <p>By <%= post.author.username %></p>
     <p><%= post.content %></p>
+
+    <!-- Form for submitting comments -->
+    <form action="/comment/<%= post._id %>" method="POST">
+        <textarea name="content" placeholder="Add your comment"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Display existing comments -->
+    <h3>Comments</h3>
+    <ul>
+        <% post.comments.forEach(comment => { %>
+            <li>
+                <p>By <%= comment.author.username %></p>
+                <p><%= comment.content %></p>
+            </li>
+        <% }); %>
+    </ul>
 </div>
