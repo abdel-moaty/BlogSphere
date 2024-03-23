@@ -258,3 +258,15 @@ app.post('/register', (req, res) => {
             res.status(500).send('Internal Server Error');
         });
 });
+
+// Add route for user login form
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+// Handle user login form submission
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
