@@ -226,3 +226,35 @@ app.post('/comment/:postId', ensureAuthenticated, (req, res) => {
             res.redirect(`/post/${postId}`);
         });
 });
+
+// Add route for user registration form
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'register.html'));
+});
+
+// Handle user registration form submission
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
+
+    // Validate username and password
+    if (!username || !password) {
+        return res.status(400).send('Username and password are required');
+    }
+
+    // Check if username already exists
+    User.findOne({ username: username })
+        .then(user => {
+            if (user) {
+                return res.status(400).send('Username already exists');
+            }
+            // Create new user
+            return User.create({ username: username, password: password });
+        })
+        .then(newUser => {
+            res.redirect('/login'); // Redirect to login page after successful registration
+        })
+        .catch(err => {
+            console.error('Error registering user:', err);
+            res.status(500).send('Internal Server Error');
+        });
+});
