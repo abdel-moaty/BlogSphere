@@ -287,3 +287,19 @@ app.post('/login', passport.authenticate('local', {
 app.use((req, res, next) => {
     res.status(404).send('404 Not Found');
 });
+
+const rateLimit = require('express-rate-limit');
+
+// Rate limiting middleware for API protection
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.'
+});
+
+// Apply rate limiting middleware to specific routes or all routes
+app.use('/api/', limiter); // Apply rate limiting to all routes starting with '/api/'
+
+// Or apply rate limiting to all routes
+// app.use(limiter); // Apply rate limiting to all routes
+
