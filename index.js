@@ -18,6 +18,18 @@ app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Logging middleware for request tracking
+app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    const method = req.method;
+    const url = req.url;
+    const clientIP = req.ip;
+
+    console.log(`[${timestamp}] ${method} ${url} - IP: ${clientIP}`);
+
+    next();
+});
+
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/BlogSphere', {
     useNewUrlParser: true,
