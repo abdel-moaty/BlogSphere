@@ -30,6 +30,11 @@ app.use((req, res, next) => {
     next();
 });
 
+// Route for serving the about page
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'about.html'));
+});
+
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/BlogSphere', {
     useNewUrlParser: true,
@@ -302,4 +307,3 @@ app.use('/api/', limiter); // Apply rate limiting to all routes starting with '/
 
 // Or apply rate limiting to all routes
 // app.use(limiter); // Apply rate limiting to all routes
-
