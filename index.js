@@ -35,6 +35,11 @@ app.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'about.html'));
 });
 
+// Route for serving the contact us page
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'contact.html'));
+});
+
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/BlogSphere', {
     useNewUrlParser: true,
